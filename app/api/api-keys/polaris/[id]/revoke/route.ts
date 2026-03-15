@@ -32,7 +32,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     });
 
     return NextResponse.json({ success: true, message: 'API key revoked' });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }

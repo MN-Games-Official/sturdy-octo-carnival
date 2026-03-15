@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true, keys });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       message: 'Roblox API key saved',
       key: { id: apiKey.id, key_prefix: apiKey.key_prefix, is_active: apiKey.is_active },
     }, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -75,7 +75,7 @@ export async function DELETE(request: NextRequest) {
       where: { user_id: user.userId, type: 'roblox' },
     });
     return NextResponse.json({ success: true, message: 'Roblox API key deleted' });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true, keys });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       preview: key_prefix,
       key_id: apiKey.id,
     }, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }

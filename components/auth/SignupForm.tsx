@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, SignupInput } from '@/lib/validation';
@@ -12,7 +11,6 @@ import { Input } from '@/components/ui/Input';
 import { Alert } from '@/components/ui/Alert';
 
 export function SignupForm() {
-  const router = useRouter();
   const { showToast } = useToast();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);

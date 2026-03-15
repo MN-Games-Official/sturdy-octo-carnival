@@ -8,7 +8,7 @@ function getUser(request: NextRequest) {
   return verifyToken(token);
 }
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest) {
   const user = getUser(request);
   if (!user) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
 

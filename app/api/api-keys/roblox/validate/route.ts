@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
     const preview = api_key.slice(0, 12) + '...' + api_key.slice(-4);
     return NextResponse.json({ success: true, message: 'API key is valid', preview });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Validation failed' }, { status: 500 });
   }
 }

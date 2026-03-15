@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     await prisma.user.update({ where: { id: user.userId }, data: { password_hash } });
 
     return NextResponse.json({ success: true, message: 'Password changed successfully' });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }

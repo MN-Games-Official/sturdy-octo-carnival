@@ -24,7 +24,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       success: true,
       rank_center: { ...rc, ranks: JSON.parse(rc.ranks_json) },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -56,7 +56,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     });
 
     return NextResponse.json({ success: true, rank_center: updated });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -73,7 +73,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     await prisma.rankCenter.delete({ where: { id: params.id } });
     return NextResponse.json({ success: true, message: 'Rank center deleted' });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }

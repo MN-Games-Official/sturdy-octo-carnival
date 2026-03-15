@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     if (!dbUser) return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
 
     return NextResponse.json({ success: true, user: dbUser });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -49,7 +49,7 @@ export async function PUT(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true, user: updated });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
