@@ -3,9 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema, LoginInput } from '@/lib/validation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
@@ -17,18 +14,31 @@ export function LoginForm() {
   const { login } = useAuth();
   const { showToast } = useToast();
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
   });
 
-  const onSubmit = async (data: LoginInput) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setError(null);
+    setIsLoading(true);
+
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
@@ -43,6 +53,8 @@ export function LoginForm() {
       router.push('/dashboard');
     } catch {
       setError('Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,20 +69,22 @@ export function LoginForm() {
         <Alert type="error" message={error} onClose={() => setError(null)} className="mb-4" />
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-4">
         <Input
+          name="email"
           label="Email address"
           type="email"
           placeholder="you@example.com"
-          error={errors.email?.message}
-          {...register('email')}
+          value={formData.email}
+          onChange={handleChange}
         />
         <Input
+          name="password"
           label="Password"
           type="password"
           placeholder="••••••••"
-          error={errors.password?.message}
-          {...register('password')}
+          value={formData.password}
+          onChange={handleChange}
         />
 
         <div className="flex items-center justify-end">
@@ -79,7 +93,7 @@ export function LoginForm() {
           </Link>
         </div>
 
-        <Button type="submit" loading={isSubmitting} className="w-full" size="lg">
+        <Button type="submit" loading={isLoading} className="w-full" size="lg">
           Sign in
         </Button>
       </form>
