@@ -13,8 +13,9 @@ export function SignupForm() {
   const { showToast } = useToast();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignupInput>({
+  const { register, getValues } = useForm<SignupInput>({
     defaultValues: {
       email: '',
       username: '',
@@ -23,8 +24,13 @@ export function SignupForm() {
     },
   });
 
-  const onSubmit = async (data: SignupInput) => {
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setError(null);
+    setIsLoading(true);
+    
+    const data = getValues();
+    
     try {
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
@@ -43,6 +49,8 @@ export function SignupForm() {
       showToast('Account created! Check your email to verify.', 'success');
     } catch {
       setError('Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,19 +82,17 @@ export function SignupForm() {
         <Alert type="error" message={error} onClose={() => setError(null)} className="mb-4" />
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-4">
         <Input
           label="Full name (optional)"
           type="text"
           placeholder="Your Name"
-          error={errors.full_name?.message}
           {...register('full_name')}
         />
         <Input
           label="Username"
           type="text"
           placeholder="username123"
-          error={errors.username?.message}
           helper="3-20 chars, letters, numbers, underscores"
           {...register('username')}
         />
@@ -94,19 +100,17 @@ export function SignupForm() {
           label="Email address"
           type="email"
           placeholder="you@example.com"
-          error={errors.email?.message}
           {...register('email')}
         />
         <Input
           label="Password"
           type="password"
           placeholder="••••••••"
-          error={errors.password?.message}
           helper="Min 8 chars with uppercase, number, and special char"
           {...register('password')}
         />
 
-        <Button type="submit" loading={isSubmitting} className="w-full" size="lg">
+        <Button type="submit" loading={isLoading} className="w-full" size="lg">
           Create account
         </Button>
       </form>
