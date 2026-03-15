@@ -8,11 +8,19 @@ import { sendVerificationEmail } from '@/lib/email';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log('Received signup request body:', body);
+    console.log('Body keys:', Object.keys(body));
+    console.log('Body values:', Object.entries(body).map(([k, v]) => `${k}: ${typeof v} = ${v}`));
+    
     const result = signupSchema.safeParse(body);
     
     if (!result.success) {
+      console.log('Validation failed:', result.error.issues);
+      const issue = result.error.issues[0];
+      const fieldName = issue.path.join('.');
+      const message = `${fieldName || 'Validation'}: ${issue.message}`;
       return NextResponse.json(
-        { success: false, error: result.error.issues[0].message },
+        { success: false, error: message },
         { status: 400 }
       );
     }

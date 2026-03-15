@@ -16,8 +16,9 @@ export function SignupForm() {
   const [success, setSuccess] = useState(false);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignupInput>({
+    mode: 'onSubmit',
+    reValidateMode: 'onSubmit',
     resolver: zodResolver(signupSchema),
-    mode: 'onBlur',
     defaultValues: {
       email: '',
       username: '',
@@ -28,6 +29,9 @@ export function SignupForm() {
 
   const onSubmit = async (data: SignupInput) => {
     setError(null);
+    console.log('Form data being submitted:', data);
+    console.log('Data keys:', Object.keys(data));
+    console.log('Data values:', Object.entries(data).map(([k, v]) => `${k}: ${typeof v} = ${v}`));
     try {
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
