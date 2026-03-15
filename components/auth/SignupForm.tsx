@@ -3,8 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { signupSchema, SignupInput } from '@/lib/validation';
+import { SignupInput } from '@/lib/validation';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -16,9 +15,6 @@ export function SignupForm() {
   const [success, setSuccess] = useState(false);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignupInput>({
-    mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
-    resolver: zodResolver(signupSchema),
     defaultValues: {
       email: '',
       username: '',
@@ -29,9 +25,6 @@ export function SignupForm() {
 
   const onSubmit = async (data: SignupInput) => {
     setError(null);
-    console.log('Form data being submitted:', data);
-    console.log('Data keys:', Object.keys(data));
-    console.log('Data values:', Object.entries(data).map(([k, v]) => `${k}: ${typeof v} = ${v}`));
     try {
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
