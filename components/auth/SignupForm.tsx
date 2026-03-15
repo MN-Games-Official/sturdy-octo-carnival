@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
-import { SignupInput } from '@/lib/validation';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -15,27 +13,31 @@ export function SignupForm() {
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { register, getValues } = useForm<SignupInput>({
-    defaultValues: {
-      email: '',
-      username: '',
-      password: '',
-      full_name: '',
-    },
+  const [formData, setFormData] = useState({
+    email: '',
+    username: '',
+    password: '',
+    full_name: '',
   });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-    
-    const data = getValues();
-    
+
     try {
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
@@ -84,30 +86,38 @@ export function SignupForm() {
 
       <form onSubmit={onSubmit} className="space-y-4">
         <Input
+          name="full_name"
           label="Full name (optional)"
           type="text"
           placeholder="Your Name"
-          {...register('full_name')}
+          value={formData.full_name}
+          onChange={handleChange}
         />
         <Input
+          name="username"
           label="Username"
           type="text"
           placeholder="username123"
           helper="3-20 chars, letters, numbers, underscores"
-          {...register('username')}
+          value={formData.username}
+          onChange={handleChange}
         />
         <Input
+          name="email"
           label="Email address"
           type="email"
           placeholder="you@example.com"
-          {...register('email')}
+          value={formData.email}
+          onChange={handleChange}
         />
         <Input
+          name="password"
           label="Password"
           type="password"
           placeholder="••••••••"
           helper="Min 8 chars with uppercase, number, and special char"
-          {...register('password')}
+          value={formData.password}
+          onChange={handleChange}
         />
 
         <Button type="submit" loading={isLoading} className="w-full" size="lg">
