@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -21,7 +22,6 @@ model User {
   rankCenters       RankCenter[]
   apiKeys           ApiKey[]
   passwordResets    PasswordReset[]
-  emailVerification EmailVerification?
 }
 
 model ApiKey {
@@ -107,5 +107,4 @@ model EmailVerification {
   expires_at DateTime
   used       Boolean   @default(false)
   created_at DateTime  @default(now())
-  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
