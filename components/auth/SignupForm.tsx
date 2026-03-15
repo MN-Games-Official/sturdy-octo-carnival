@@ -17,6 +17,7 @@ export function SignupForm() {
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignupInput>({
     resolver: zodResolver(signupSchema),
+    mode: 'onBlur',
     defaultValues: {
       email: '',
       username: '',
