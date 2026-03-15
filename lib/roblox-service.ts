@@ -64,7 +64,7 @@ export class RobloxService {
       const response = await fetch('https://apis.roblox.com/cloud/v2/users/me', {
         headers: { 'x-api-key': this.apiKey },
       });
-      return response.ok || response.status === 403;
+      return response.ok;
     } catch {
       return false;
     }

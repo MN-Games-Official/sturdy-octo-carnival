@@ -1,5 +1,9 @@
 import crypto from 'crypto';
 
+if (process.env.NODE_ENV === 'production' && !process.env.ENCRYPTION_KEY) {
+  throw new Error('ENCRYPTION_KEY environment variable must be set in production');
+}
+
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'default-key-change-in-production!!';
 const ALGORITHM = 'aes-256-cbc';
 const KEY = Buffer.from(ENCRYPTION_KEY.slice(0, 32).padEnd(32, '0'), 'utf8');

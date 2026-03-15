@@ -2,6 +2,10 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import type { StringValue } from 'ms';
 
+if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable must be set in production');
+}
+
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
 const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '24h') as StringValue;
 
